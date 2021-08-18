@@ -18,7 +18,8 @@ mix
     require('tailwindcss'),
     require('postcss-nested'),
     require('autoprefixer'),
-  ]);
+  ])
+  .browserSync('laravelblog.test');
 
 if (mix.inProduction()) {
   mix
