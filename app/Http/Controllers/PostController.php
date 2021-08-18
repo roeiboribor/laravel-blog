@@ -14,7 +14,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        return view('blog.index');
+        $post = Post::orderBy('updated_at', 'DESC')->get();
+
+        return view('blog.index',[
+            'posts' => $post
+        ]);
     }
 
     /**
