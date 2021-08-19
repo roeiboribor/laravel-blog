@@ -22,7 +22,7 @@
 @endif
 
 <div class="w-4/5 m-auto pt-20">
-    <form action="/blog" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('blog.index') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <input type="text" name="title" id="title" placeholder="Title..."
