@@ -12,3 +12,4 @@ It consist of basic CRUD application for blog post & TailwindCss auth scaffoldin
 5. npm install laravel-mix --save-dev
 6. npm install cross-env --save-dev
 7. npm run watch, npm run dev or npm run prod
+8. composer require cviebrock/eloquent-sluggable Note:(to create slug from the title).
