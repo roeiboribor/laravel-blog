@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -46,41 +47,70 @@ class PostController extends Controller
         ]);
 
         $newImageName = uniqid().'-'.$request->title.'.'.$request->image->extension();
-        $request->image->move(public_path('images'), $newImageName);
+        $request->image->move(public_path('img'), $newImageName);
+        $slug = SlugService::createSlug(Post::class,'slug',$request->title);
+
+        Post::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'slug' => $slug,
+            'image_path' => $newImageName,
+            'user_id' => auth()->user()->id
+        ]);
+
+        return redirect(route('blog.index'))
+        ->with('message','Your post has been added!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param  string   $slug
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($slug)
     {
-        //
+        return view('blog.show',[
+            'post' => Post::where('slug', $slug)->first()
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($slug)
     {
-        //
+        return view('blog.edit',[
+            'post' => Post::where('slug', $slug)->first()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
+     * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $slug)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+
+        Post::where('slug',$slug)
+        ->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'user_id' => auth()->user()->id
+        ]);
+
+        return redirect(route('blog.index'))
+        ->with('message','Your post has been updated!');
     }
 
     /**

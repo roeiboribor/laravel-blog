@@ -9,6 +9,14 @@
     </div>
 </div>
 
+@if (session('message'))
+<div class="w-4/5 m-auto mt-10 pl-2">
+    <p class="w-2/6 mb-4 text-gray-50 bg-green-500 rounded-2xl py-4 text-center">
+        {{ session('message') }}
+    </p>
+</div>
+@endif
+
 @if (Auth::check())
 <div class="pt-15 w-4/5 m-auto">
     <a href="{{ url('/blog/create') }}"
@@ -21,8 +29,7 @@
 @foreach ($posts as $post)
 <div class="sm:grid grid-cols-2 gap-20 w-4/5 mx-auto py-15 border-b border-gray-200">
     <div>
-        <img src="https://cdn.pixabay.com/photo/2014/05/02/21/49/laptop-336373_960_720.jpg" width="700"
-            alt="laptop white">
+        <img src="{{ asset('img/'.$post->image_path) }}" width="700" alt="laptop white">
     </div>
     <div>
         <h2 class="text-gray-700 font-bold text-5xl pb-4">
@@ -36,10 +43,18 @@
         <p class="text-xl text-gray-700 pt-8 pb-10 leading-8 font-light">
             {{ $post->description }}
         </p>
-        <a href="/blog/{{ $post->slug }}"
+        <a href="{{ route('blog.show',$post->slug) }}"
             class="uppercase bg-blue-500 text-gray-100 text-lg font-extrabold py-4 px-8 rounded-3xl">
             Keep Reading
         </a>
+        @if (isset(Auth::user()->id) && Auth::user()->id == $post->user_id)
+        <span class="float-right">
+            <a href="{{ route('blog.edit',$post->slug) }}"
+                class="text-gray-700 italic hover:text-gray-900 pb-1 border-b-2">
+                Edit
+            </a>
+        </span>
+        @endif
     </div>
 </div>
 @endforeach
