@@ -23,6 +23,7 @@ Route::prefix('/blog')->group(function () {
     Route::get('/create',[PostController::class,'create'])->name('blog.create');
     Route::get('/{slug}',[PostController::class,'show'])->name('blog.show');
     Route::put('/{slug}',[PostController::class,'update'])->name('blog.update');
+    Route::delete('/{slug}',[PostController::class,'edit'])->name('blog.destroy');
     Route::get('/{slug}/edit',[PostController::class,'edit'])->name('blog.edit');
 });
 
